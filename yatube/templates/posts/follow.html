@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% block title %} Подписки {{ user.username }} {% endblock %}
+{% block content %}
+  <h1>Ваши подписки</h1>
+  {% include 'posts/includes/switcher.html' with follow=True %}
+  {% if page_obj %}
+    {% for post in page_obj %}
+      {% include 'posts/includes/post_list.html' %}
+      {% if post.group %}
+        <a href="{% url 'posts:group_list' post.group.slug %}">
+          Bсе записи группы
+        </a>
+      {% endif%}
+      {% if not forloop.last %}<hr>{% endif%}
+    {% endfor %}
+  {% else %}
+    <article>
+      <ul>
+        <p>У Вас ещё нет подписок</p>
+      </ul>
+    </article>
+  {% endif %}
+  {% include 'posts/includes/paginator.html' %}
+{% endblock %}
