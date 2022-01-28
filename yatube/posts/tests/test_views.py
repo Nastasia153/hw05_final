@@ -169,7 +169,7 @@ class PostViewsTest(BaseTest):
                 self.compair_posts(new_post)
 
     def test_new_post_with_pictures_in_right_place(self):
-        """Новый пост с image есть на страницах index, group, profile, detail"""
+        """Новый пост с img есть на страницах index, group, profile, detail"""
         small_gif = (
             b'\x47\x49\x46\x38\x39\x61\x02\x00'
             b'\x01\x00\x80\x00\x00\x00\x00\x00'
@@ -215,7 +215,7 @@ class PostViewsTest(BaseTest):
 class FollowViewsTest(BaseTest):
 
     def test_authorized_can_follow_and_unfollow(self):
-        """Авторизированный пользователь может подписатья и отписаться"""
+        """Авторизированный пользователь может подписатьcя и отписаться"""
         self.authorized_client.get(reverse(
             'posts:profile_follow',
             kwargs={'username': self.user_2.username})
@@ -231,6 +231,7 @@ class FollowViewsTest(BaseTest):
         self.assertEqual(count_follower - 1, again_count_follower)
 
     def test_follower_can_see_new_post(self):
+        """Новый пост видят подписчики в избраном"""
         self.authorized_client_2.get(reverse(
             'posts:profile_follow',
             kwargs={'username': self.user.username}
@@ -242,11 +243,12 @@ class FollowViewsTest(BaseTest):
         user_3 = User.objects.create_user(username='testuser3')
         authorized_client_3 = Client()
         authorized_client_3.force_login(user_3)
-        user_2_response = self.authorized_client_2.get(reverse('posts:follow_index'))
+        user_2_response = self.authorized_client_2.get(
+            reverse('posts:follow_index'))
         self.assertEqual(user_2_response.context['page_obj'][0], new_post)
-        user_3_response = authorized_client_3.get(reverse('posts:follow_index'))
-
-        self.assertTrue(new_post, user_3_response)
+        user_3_response = authorized_client_3.get(
+            reverse('posts:follow_index'))
+        self.assertEqual(len(user_3_response.context['page_obj']), 0)
 
 
 class PaginatorViewsTest(TestCase):
