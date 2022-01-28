@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 
-import core
 from ..models import Post, Group
 
 User = get_user_model()

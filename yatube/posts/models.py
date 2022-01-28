@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.constraints import UniqueConstraint
 from django.contrib.auth import get_user_model
@@ -101,7 +100,9 @@ class Follow(models.Model):
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=['user', 'author'], name='unique_follower'),
+            UniqueConstraint(
+                fields=['user', 'author'],
+                name='unique_follower'),
             models.CheckConstraint(
                 check=~models.Q(user=models.F('author')),
                 name='check_following'
