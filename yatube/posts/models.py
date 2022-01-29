@@ -64,7 +64,7 @@ class Comment(models.Model):
         Post,
         on_delete=models.CASCADE,
         related_name='comments',
-        verbose_name='Комментарий'
+        verbose_name='Текст'
     )
     author = models.ForeignKey(
         User,

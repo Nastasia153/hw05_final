@@ -201,27 +201,40 @@ class PostViewsTest(BaseTest):
                                  post_wth_pic.image.name)
 
     def test_cache_index_page(self):
-        cache1 = self.guest_client.get('/').content
+        cache1 = self.guest_client.get(
+            reverse('posts:index')
+        ).content
         Post.objects.create(
             text='Новый текст для кеша',
             author=self.user,
         )
-        cache2 = self.guest_client.get('/').content
+        cache2 = self.guest_client.get(
+            reverse('posts:index')
+        ).content
         self.assertEqual(cache1, cache2)
         cache.clear()
-        self.assertNotEqual(cache2, self.guest_client.get('/').content)
+        self.assertNotEqual(cache2, self.guest_client.get(
+            reverse('posts:index')
+        ).content)
 
 
 class FollowViewsTest(BaseTest):
 
-    def test_authorized_can_follow_and_unfollow(self):
-        """Авторизированный пользователь может подписатьcя и отписаться"""
+    def test_authorized_user_can_follow(self):
+        """Авторизированный пользователь может подписатьcя"""
         self.authorized_client.get(reverse(
             'posts:profile_follow',
             kwargs={'username': self.user_2.username})
         )
         follower = Follow.objects.get(user=self.user)
         self.assertEqual(self.user_2, follower.author)
+
+    def test_follower_user_can_unfollow(self):
+        """Подписчик может отписаться от автора"""
+        self.authorized_client.get(reverse(
+            'posts:profile_follow',
+            kwargs={'username': self.user_2.username})
+        )
         count_follower = Follow.objects.count()
         self.authorized_client.get(reverse(
             'posts:profile_unfollow',

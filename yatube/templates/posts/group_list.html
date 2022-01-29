@@ -17,7 +17,7 @@
         Дата публикации: {{ post.pub_date|date:"d E Y" }}
       </li>
     </ul>
-  <p>{{ post }}</p>
+  <p>{{ post.text|linebreaks }}</p>
   <a href="{% url 'posts:post_detail' post_id=post.pk %}">Подробная информация</a><br>
   {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}

@@ -56,7 +56,7 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    form_comment = CommentForm(request.POST or None)
+    form_comment = CommentForm()
     comments = post.comments.all()
     template = 'posts/post_detail.html'
     context = {
@@ -133,13 +133,9 @@ def follow_index(request):
 @login_required
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
-    if request.user == author or Follow.objects.filter(
-            user=request.user,
-            author=author
-    ).exists():
+    if request.user == author:
         return redirect('posts:profile', username=username)
-    else:
-        Follow.objects.create(user=request.user, author=author)
+    Follow.objects.get_or_create(user=request.user, author=author)
     return redirect('posts:profile', username=username)
 
 
