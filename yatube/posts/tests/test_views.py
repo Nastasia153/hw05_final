@@ -231,10 +231,7 @@ class FollowViewsTest(BaseTest):
 
     def test_follower_user_can_unfollow(self):
         """Подписчик может отписаться от автора"""
-        self.authorized_client.get(reverse(
-            'posts:profile_follow',
-            kwargs={'username': self.user_2.username})
-        )
+        Follow.objects.create(user=self.user, author=self.user_2)
         count_follower = Follow.objects.count()
         self.authorized_client.get(reverse(
             'posts:profile_unfollow',
